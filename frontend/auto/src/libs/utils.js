@@ -6,6 +6,6 @@ const getContextPath = () => {
   return contextPath === '/' ? '' : contextPath
 }
 
-export default utils ={
+export const utils = {
   getContextPath
 }

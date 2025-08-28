@@ -4,10 +4,10 @@ const financeSlice = createSlice({
   name: 'finance',
   initialState: {financeList : []},
   reducers: {
-    setFinanceValue: (state) => {
+    setFinanceValue: (state, action) => {
 
     },
-    getFinanceValue: (state) => {
+    getFinanceValue: (state, action) => {
 
     }
   }
