@@ -8,6 +8,7 @@ import store from "./components/stores";
 import { utils } from "./libs/utils.js"
 import {PrimeReactProvider} from "primereact/api";
 import ErrorBoundary from "./components/common/ErrorBoundary.jsx";
+import Test from "./components/views/Test.jsx";
 
 function App() {
   const contextPath = utils.getContextPath();
@@ -21,7 +22,7 @@ function App() {
           <Suspense fallback={<PageLoader />}>
             <BrowserRouter basename={contextPath}>
               <Routes>
-                {/*<Route path="/" element={<Test />}></Route>*/}
+                <Route path="/" element={<Test />}></Route>
                 {/*<Route element={}>*/}
                 {/*</Route>*/}
               </Routes>
