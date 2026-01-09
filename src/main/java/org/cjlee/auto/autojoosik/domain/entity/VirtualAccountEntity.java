@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "tb_schedule_info")
-public class TbVirtualAccountEntity {
+public class VirtualAccountEntity {
     private static final Long serialVersionUID = 1L;
 
     @Id
