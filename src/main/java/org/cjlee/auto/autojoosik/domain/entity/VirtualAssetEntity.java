@@ -2,12 +2,13 @@ package org.cjlee.auto.autojoosik.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.cjlee.auto.autojoosik.autojoosik.stockDashboard.bean.VirtualAssetVO;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "tb_schedule_info")
+@Table(name = "tb_virtual_asset")
 public class VirtualAssetEntity {
     private static final Long serialVersionUID = 1L;
 
@@ -75,4 +76,30 @@ public class VirtualAssetEntity {
 
     @Column(name = "highest_price")
     private int highestPrice;
+
+    public VirtualAssetVO toVirtualAssetVO () {
+        VirtualAssetVO vo = new VirtualAssetVO();
+        vo.setAssetId(this.getAssetId());
+        vo.setUserId(this.getUserId());
+        vo.setAccountId(this.getAccountId());
+        vo.setStkCd(this.getStkCd());
+        vo.setMarket(this.getMarket());
+        vo.setPositionSide(this.getPositionSide());
+        vo.setQty(this.getQty());
+        vo.setAvailableQty(this.getAvailableQty());
+        vo.setAvgPrice(this.getAvgPrice());
+        vo.setLastPrice(this.getLastPrice());
+        vo.setInvestedAmount(this.getInvestedAmount());
+        vo.setEvalAmount(this.getEvalAmount());
+        vo.setEvalPl(this.getEvalPl());
+        vo.setTodayBuyQty(this.getTodayBuyQty());
+        vo.setTodaySellQty(this.getTodaySellQty());
+        vo.setStatus(this.getStatus());
+        vo.setLastEvalAt(this.getLastEvalAt());
+        vo.setCreatedAt(this.getCreatedAt());
+        vo.setUpdatedAt(this.getUpdatedAt());
+        vo.setHighestPrice(this.getHighestPrice());
+
+        return vo;
+    }
 }

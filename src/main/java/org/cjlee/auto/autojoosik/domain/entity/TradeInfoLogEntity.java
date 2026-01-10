@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "tb_schedule_info")
+@Table(name = "tb_trade_info_log")
 public class TradeInfoLogEntity {
     private static final Long serialVersionUID = 1L;
 

@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Data
 @Entity
-@Table(name = "tb_schedule_info")
+@Table(name = "tb_stock_score")
 public class StockScoreEntity {
     private static final Long serialVersionUID = 1L;
 
