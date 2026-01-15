@@ -1,16 +1,28 @@
 import { TrendingUp, TrendingDown, DollarSign, Activity } from 'lucide-react';
-import assetService from "@/app/services/assetService.jsx";
-import {useEffect, useState} from "react";
+import assetService from "@/app/services/stockDashboardService.jsx";
+import {useEffect, useMemo, useState} from "react";
 import {constants} from "@/app/libs/constants.js";
 
 export function StockDashboard({ stocks, cash, onStockClick }) {
   const [assetList, setAssetList] = useState([])
+  const [account, setAccount] = useState({})
+  // cash_balance + total_eval
+
+  const totalAssets = useMemo(() => {
+    if (!account) return 0;
+
+    return (account.cashBalance ?? 0) + (account.totalEval ?? 0);
+  }, [account?.cashBalance, account?.totalEval]);
 
   const dataLoad = async () => {
     try {
-      const response = await assetService().getAssetList()
-      if(response.status === constants.RESULT_SUCCESS){
-        setAssetList(response.body)
+      const assetResponse = await assetService().getAssetList()
+      const accountResponse = await assetService().getAccount()
+      if(assetResponse.status === constants.RESULT_SUCCESS){
+        setAssetList(assetResponse.body)
+      }
+      if(accountResponse.status === constants.RESULT_SUCCESS){
+        setAccount(accountResponse.body)
       }
     } catch (e) {
       console.log(e)
@@ -22,16 +34,8 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
       dataLoad()
   }, []);
 
-
-  const totalInvested = stocks.reduce((sum, stock) => sum + (stock.shares * stock.avgPrice), 0);
-  const totalValue = stocks.reduce((sum, stock) => sum + (stock.shares * stock.currentPrice), 0);
-  const totalGain = totalValue - totalInvested;
-  const totalGainPercent = totalInvested > 0 ? (totalGain / totalInvested) * 100 : 0;
-  const totalAssets = totalValue + cash;
-
   return (
     <div className="space-y-6">
-      <button onClick={dataLoad}>버튼!</button>
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow p-6">
@@ -40,7 +44,7 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
             <DollarSign className="w-5 h-5 text-blue-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            ₩{totalAssets.toLocaleString()}
+            ₩{totalAssets ? parseFloat(totalAssets).toLocaleString() : '-'}
           </div>
         </div>
 
@@ -50,7 +54,7 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
             <Activity className="w-5 h-5 text-purple-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            ₩{totalValue.toLocaleString()}
+            ₩{account.totalEval ? parseFloat(account.totalEval).toLocaleString() : '-'}
           </div>
         </div>
 
@@ -60,25 +64,33 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
             <DollarSign className="w-5 h-5 text-green-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            ₩{cash.toLocaleString()}
+            ₩{account.cashBalance ? parseFloat(account.cashBalance).toLocaleString() : '-'}
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm text-gray-600">총 수익률</span>
-            {totalGainPercent >= 0 ? (
-              <TrendingUp className="w-5 h-5 text-green-600" />
-            ) : (
-              <TrendingDown className="w-5 h-5 text-red-600" />
-            )}
+
+            {(() => {
+              const rate = account?.totalPlRate ?? 0;
+              return rate >= 0
+                ? <TrendingUp className="w-5 h-5 text-green-600"/>
+                : <TrendingDown className="w-5 h-5 text-red-600"/>;
+            })()}
           </div>
-          <div className={`text-2xl font-bold ${totalGainPercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {totalGainPercent >= 0 ? '+' : ''}{totalGainPercent.toFixed(2)}%
-          </div>
-          <div className={`text-sm ${totalGainPercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {totalGainPercent >= 0 ? '+' : ''}₩{totalGain.toLocaleString()}
-          </div>
+
+          {(() => {
+            const rate = Number(account?.totalPlRate ?? 0);
+            const isUp = rate >= 0;
+
+            return (
+              <div className={`text-2xl font-bold ${isUp ? 'text-green-600' : 'text-red-600'}`}>
+                {isUp ? '+' : ''}
+                {rate.toFixed(2)}%
+              </div>
+            );
+          })()}
         </div>
       </div>
 
@@ -90,10 +102,10 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">종목</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">보유수량</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">평균단가</th>
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">종목</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">보유수량</th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">평균단가</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">현재가</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">평가금액</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">수익률</th>

@@ -2,13 +2,17 @@ package org.cjlee.auto.autojoosik.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.cjlee.auto.autojoosik.autojoosik.stockDashboard.bean.VirtualAccountVO;
+import org.cjlee.auto.autojoosik.autojoosik.stockDashboard.bean.VirtualAssetVO;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
 @Table(name = "tb_virtual_account")
-public class VirtualAccountEntity {
+public class VirtualAccountEntity implements Serializable {
     private static final Long serialVersionUID = 1L;
 
     @Id
@@ -51,4 +55,23 @@ public class VirtualAccountEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public VirtualAccountVO toVirtualAccountVO() {
+        VirtualAccountVO vo = new VirtualAccountVO();
+        vo.setAccountId(this.accountId);
+        vo.setUserId(this.userId);
+        vo.setAccountName(this.accountName);
+        vo.setCashBalance(this.cashBalance);
+        vo.setTotalInvested(this.totalInvested);
+        vo.setTotalEval(this.totalEval);
+        vo.setTotalPl(this.totalPl);
+        vo.setTotalPlRate(this.totalPlRate);
+        vo.setDepositAmount(this.depositAmount);
+        vo.setWithdrawAmount(this.withdrawAmount);
+        vo.setStatus(this.status);
+        vo.setCreatedAt(this.createdAt);
+        vo.setUpdatedAt(this.updatedAt);
+
+        return vo;
+    }
 }

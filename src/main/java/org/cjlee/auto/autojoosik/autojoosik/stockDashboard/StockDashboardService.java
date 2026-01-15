@@ -8,14 +8,17 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.cjlee.auto.autojoosik.autojoosik.stockDashboard.bean.VirtualAccountVO;
 import org.cjlee.auto.autojoosik.autojoosik.stockDashboard.bean.VirtualAssetVO;
 import org.cjlee.auto.autojoosik.common.ResponseResult;
 import org.cjlee.auto.autojoosik.common.ResponseResultList;
 import org.cjlee.auto.autojoosik.domain.dto.VirtualAssetDTO;
 import org.cjlee.auto.autojoosik.domain.entity.QStockInfoEntity;
 import org.cjlee.auto.autojoosik.domain.entity.QVirtualAssetEntity;
+import org.cjlee.auto.autojoosik.domain.entity.VirtualAccountEntity;
 import org.cjlee.auto.autojoosik.domain.entity.VirtualAssetEntity;
 import org.cjlee.auto.autojoosik.domain.repository.StockInfoRepository;
+import org.cjlee.auto.autojoosik.domain.repository.VirtualAccountRepository;
 import org.cjlee.auto.autojoosik.domain.repository.VirtualAssetRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,7 @@ public class StockDashboardService {
     private EntityManager em;
 
     private final VirtualAssetRepository virtualAssetRepository;
+    private final VirtualAccountRepository virtualAccountRepository;
     private final StockInfoRepository stockInfoRepository;
 
     public List<VirtualAssetVO> getAssets() {
@@ -79,6 +83,16 @@ public class StockDashboardService {
       }
 
         return voList;
+    }
+
+    public VirtualAccountVO getAccount() {
+        List<VirtualAccountEntity> entityList = virtualAccountRepository.findAll();
+        VirtualAccountVO virtualAccountVO = new VirtualAccountVO();
+        if(entityList.size() > 0) {
+            virtualAccountVO = entityList.get(0).toVirtualAccountVO();
+        }
+
+        return virtualAccountVO;
     }
 }
 
