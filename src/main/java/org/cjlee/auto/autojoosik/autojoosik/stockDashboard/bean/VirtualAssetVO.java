@@ -17,9 +17,9 @@ public class VirtualAssetVO {
     private int avgPrice;
     private int lastPrice;
     private int investedAmount;
-    private int evalAmount;
-    private int evalPl;
-    private float evalPlRate;
+    private Integer evalAmount;
+    private Integer evalPl;
+    private Float evalPlRate;
     private int todayBuyQty;
     private int todaySellQty;
     private String status;
@@ -27,4 +27,6 @@ public class VirtualAssetVO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private int highestPrice;
+
+    private String stkNm;
 }
