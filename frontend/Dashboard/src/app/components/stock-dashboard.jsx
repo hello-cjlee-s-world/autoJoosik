@@ -19,6 +19,7 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
       const assetResponse = await assetService().getAssetList()
       const accountResponse = await assetService().getAccount()
       if(assetResponse.status === constants.RESULT_SUCCESS){
+        console.log(assetResponse.body)
         setAssetList(assetResponse.body)
       }
       if(accountResponse.status === constants.RESULT_SUCCESS){
@@ -112,43 +113,43 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {stocks.map((stock) => {
-                const value = stock.shares * stock.currentPrice;
-                const cost = stock.shares * stock.avgPrice;
+              {assetList.map((asset) => {
+                const value = asset.shares * asset.currentPrice;
+                const cost = asset.shares * asset.avgPrice;
                 const gain = value - cost;
                 const gainPercent = (gain / cost) * 100;
 
                 return (
-                  <tr 
-                    key={stock.symbol} 
+                  <tr
+                    key={asset.stkId}
                     className="hover:bg-gray-50 cursor-pointer transition-colors"
-                    onClick={() => onStockClick(stock)}
+                    onClick={() => onStockClick(asset)}
                   >
                     <td className="px-6 py-4">
                       <div>
-                        <div className="font-medium text-gray-900">{stock.symbol}</div>
-                        <div className="text-sm text-gray-500">{stock.name}</div>
+                        <div className="font-medium text-gray-900">{asset.symbol}</div>
+                        <div className="text-sm text-gray-500">{asset.stkNm}</div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right text-sm text-gray-900">
-                      {stock.shares.toLocaleString()}주
+                      {asset.qty ? parseFloat(asset.qty.toLocaleString()) + '주' : '없음'}
                     </td>
                     <td className="px-6 py-4 text-right text-sm text-gray-900">
-                      ₩{stock.avgPrice.toLocaleString()}
+                      ₩{asset.avgPrice ? asset.avgPrice.toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 text-right text-sm text-gray-900">
-                      ₩{stock.currentPrice.toLocaleString()}
+                      ₩{asset.curPrc ? asset.curPrc.toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 text-right text-sm text-gray-900">
-                      ₩{value.toLocaleString()}
+                      ₩{asset.evalAmount ? asset.evalAmount.toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 text-right text-sm">
                       <div className={gainPercent >= 0 ? 'text-green-600' : 'text-red-600'}>
                         <div className="font-medium">
-                          {gainPercent >= 0 ? '+' : ''}{gainPercent.toFixed(2)}%
+                          {asset.evalPlRate && (asset.evalPlRate >= 0) ? '+' : ''}{asset.evalPlRate ? parseFloat(asset.evalPlRate).toFixed(2) : "-"}%
                         </div>
                         <div className="text-xs">
-                          {gainPercent >= 0 ? '+' : ''}₩{gain.toLocaleString()}
+                          {asset.evalPlRate && (asset.evalPlRate >= 0) ? '+' : ''}₩{asset.evalPlRate ? parseFloat(asset.evalPlRate).toLocaleString() : "-"}
                         </div>
                       </div>
                     </td>

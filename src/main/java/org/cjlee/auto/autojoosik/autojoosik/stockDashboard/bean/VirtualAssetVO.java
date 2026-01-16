@@ -30,5 +30,5 @@ public class VirtualAssetVO {
 
     private String stkNm;
 
-    private Long curPrc;
+    private Integer curPrc;
 }

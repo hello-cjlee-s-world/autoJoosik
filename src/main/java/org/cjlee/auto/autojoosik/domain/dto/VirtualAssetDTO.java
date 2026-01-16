@@ -34,7 +34,7 @@ public class VirtualAssetDTO {
     private String stkNm;
 
     // trade info log
-    private Long curPrc;
+    private Integer curPrc;
 
   public VirtualAssetVO toVirtualAssetVO () {
         VirtualAssetVO vo = new VirtualAssetVO();
