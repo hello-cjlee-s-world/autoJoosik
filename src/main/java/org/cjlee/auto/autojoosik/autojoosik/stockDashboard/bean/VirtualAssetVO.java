@@ -29,4 +29,6 @@ public class VirtualAssetVO {
     private int highestPrice;
 
     private String stkNm;
+
+    private Long curPrc;
 }

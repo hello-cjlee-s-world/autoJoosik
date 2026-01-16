@@ -7,9 +7,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class VirtualAssetDTO {
-    //stock info
-    private String stkNm;
-
     //virtual asset
     private Long assetId;
     private Long userId;
@@ -33,8 +30,13 @@ public class VirtualAssetDTO {
     private LocalDateTime updatedAt;
     private int highestPrice;
 
+    //stock info
+    private String stkNm;
 
-    public VirtualAssetVO toVirtualAssetVO () {
+    // trade info log
+    private Long curPrc;
+
+  public VirtualAssetVO toVirtualAssetVO () {
         VirtualAssetVO vo = new VirtualAssetVO();
         vo.setStkNm(this.getStkNm());
         vo.setAssetId(this.getAssetId());
@@ -57,6 +59,7 @@ public class VirtualAssetDTO {
         vo.setCreatedAt(this.getCreatedAt());
         vo.setUpdatedAt(this.getUpdatedAt());
         vo.setHighestPrice(this.getHighestPrice());
+        vo.setCurPrc(this.getCurPrc());
 
         return vo;
     }

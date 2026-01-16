@@ -13,10 +13,7 @@ import org.cjlee.auto.autojoosik.autojoosik.stockDashboard.bean.VirtualAssetVO;
 import org.cjlee.auto.autojoosik.common.ResponseResult;
 import org.cjlee.auto.autojoosik.common.ResponseResultList;
 import org.cjlee.auto.autojoosik.domain.dto.VirtualAssetDTO;
-import org.cjlee.auto.autojoosik.domain.entity.QStockInfoEntity;
-import org.cjlee.auto.autojoosik.domain.entity.QVirtualAssetEntity;
-import org.cjlee.auto.autojoosik.domain.entity.VirtualAccountEntity;
-import org.cjlee.auto.autojoosik.domain.entity.VirtualAssetEntity;
+import org.cjlee.auto.autojoosik.domain.entity.*;
 import org.cjlee.auto.autojoosik.domain.repository.StockInfoRepository;
 import org.cjlee.auto.autojoosik.domain.repository.VirtualAccountRepository;
 import org.cjlee.auto.autojoosik.domain.repository.VirtualAssetRepository;
@@ -41,48 +38,52 @@ public class StockDashboardService {
     private final StockInfoRepository stockInfoRepository;
 
     public List<VirtualAssetVO> getAssets() {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-        QStockInfoEntity stockInfoEntity = QStockInfoEntity.stockInfoEntity;
-        QVirtualAssetEntity assetEntity = QVirtualAssetEntity.virtualAssetEntity;
+      JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+      QStockInfoEntity stockInfoEntity = QStockInfoEntity.stockInfoEntity;
+      QVirtualAssetEntity assetEntity = QVirtualAssetEntity.virtualAssetEntity;
+      QTradeInfoLogEntity tradeInfoLogEntity = QTradeInfoLogEntity.tradeInfoLogEntity;
 
-        List<VirtualAssetDTO> dtoList = queryFactory
-                .select(Projections.fields(
-                        VirtualAssetDTO.class,
-                        stockInfoEntity.stkNm,
-                        assetEntity.assetId,
-                        assetEntity.userId,
-                        assetEntity.accountId,
-                        assetEntity.stkCd,
-                        assetEntity.market,
-                        assetEntity.positionSide,
-                        assetEntity.qty,
-                        assetEntity.availableQty,
-                        assetEntity.avgPrice,
-                        assetEntity.lastPrice,
-                        assetEntity.investedAmount,
-                        assetEntity.evalAmount,
-                        assetEntity.evalPl,
-                        assetEntity.evalPlRate,
-                        assetEntity.todayBuyQty,
-                        assetEntity.todaySellQty,
-                        assetEntity.status,
-                        assetEntity.lastEvalAt,
-                        assetEntity.createdAt,
-                        assetEntity.updatedAt,
-                        assetEntity.highestPrice
-                )).from(assetEntity)
-                .leftJoin(stockInfoEntity)
-                .on(stockInfoEntity.stkCd.eq(assetEntity.stkCd))
-                .orderBy(assetEntity.assetId.asc())
-                .fetch();
+      List<VirtualAssetDTO> dtoList = queryFactory
+              .select(Projections.fields(
+                      VirtualAssetDTO.class,
+                      assetEntity.assetId,
+                      assetEntity.userId,
+                      assetEntity.accountId,
+                      assetEntity.stkCd,
+                      assetEntity.market,
+                      assetEntity.positionSide,
+                      assetEntity.qty,
+                      assetEntity.availableQty,
+                      assetEntity.avgPrice,
+                      assetEntity.lastPrice,
+                      assetEntity.investedAmount,
+                      assetEntity.evalAmount,
+                      assetEntity.evalPl,
+                      assetEntity.evalPlRate,
+                      assetEntity.todayBuyQty,
+                      assetEntity.todaySellQty,
+                      assetEntity.status,
+                      assetEntity.lastEvalAt,
+                      assetEntity.createdAt,
+                      assetEntity.updatedAt,
+                      assetEntity.highestPrice,
+                      stockInfoEntity.stkNm,
+                      tradeInfoLogEntity.curPrc
+              )).from(assetEntity)
+              .leftJoin(stockInfoEntity)
+              .on(stockInfoEntity.stkCd.eq(assetEntity.stkCd))
+              .leftJoin(tradeInfoLogEntity)
+              .on(tradeInfoLogEntity.stkCd.eq(assetEntity.stkCd))
+              .orderBy(assetEntity.assetId.asc())
+              .fetch();
 
-        List<VirtualAssetVO> voList = new ArrayList<>();
+      List<VirtualAssetVO> voList = new ArrayList<>();
       for(VirtualAssetDTO dto : dtoList){
           VirtualAssetVO virtualAssetVO = dto.toVirtualAssetVO();
           voList.add(virtualAssetVO);
       }
 
-        return voList;
+      return voList;
     }
 
     public VirtualAccountVO getAccount() {
