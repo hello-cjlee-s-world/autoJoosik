@@ -1,6 +1,28 @@
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import assetChartService from "@/app/services/assetChartService.jsx";
+import {constants} from "@/app/libs/constants.js";
+import { useEffect,useState } from "react";
 
 export function AssetChart({ data }) {
+  const [assetDailyList, setAssetDailyList] = useState([])
+
+  const dataLoad = async () => {
+    try {
+      const response = await assetChartService().getAssetDailyList()
+      if(response.status === constants.RESULT_SUCCESS){
+        console.log(response.body)
+        setAssetDailyList(response.body)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    dataLoad()
+  }, []);
+
+
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-xl font-bold text-gray-900 mb-6">자산 추이</h2>

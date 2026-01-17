@@ -1,28 +1,22 @@
 package org.cjlee.auto.autojoosik.autojoosik.stockDashboard;
 
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.cjlee.auto.autojoosik.autojoosik.stockDashboard.bean.VirtualAccountVO;
+import org.cjlee.auto.autojoosik.autojoosik.assetChart.bean.VirtualAssetDailyVO;
 import org.cjlee.auto.autojoosik.autojoosik.stockDashboard.bean.VirtualAssetVO;
-import org.cjlee.auto.autojoosik.common.ResponseResult;
-import org.cjlee.auto.autojoosik.common.ResponseResultList;
 import org.cjlee.auto.autojoosik.domain.dto.VirtualAssetDTO;
 import org.cjlee.auto.autojoosik.domain.entity.*;
 import org.cjlee.auto.autojoosik.domain.repository.StockInfoRepository;
 import org.cjlee.auto.autojoosik.domain.repository.VirtualAccountRepository;
+import org.cjlee.auto.autojoosik.domain.repository.VirtualAssetDailyRepository;
 import org.cjlee.auto.autojoosik.domain.repository.VirtualAssetRepository;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +29,7 @@ public class StockDashboardService {
     private EntityManager em;
 
     private final VirtualAssetRepository virtualAssetRepository;
+    private final VirtualAssetDailyRepository virtualAssetDailyRepository;
     private final VirtualAccountRepository virtualAccountRepository;
     private final StockInfoRepository stockInfoRepository;
 
@@ -95,6 +90,18 @@ public class StockDashboardService {
       return voList;
     }
 
+    public List<VirtualAssetDailyVO> getAssetDaily() {
+        List<VirtualAssetDailyEntity> entityList = virtualAssetDailyRepository.findAll();
+        List<VirtualAssetDailyVO> voList = new ArrayList<>();
+        if(!entityList.isEmpty()) {
+            for(VirtualAssetDailyEntity entity : entityList){
+                VirtualAssetDailyVO vo = entity.toVirtualAssetDaily();
+                voList.add(vo);
+            }
+        }
+        return voList;
+    }
+
     public VirtualAccountVO getAccount() {
         List<VirtualAccountEntity> entityList = virtualAccountRepository.findAll();
         VirtualAccountVO virtualAccountVO = new VirtualAccountVO();
@@ -104,5 +111,6 @@ public class StockDashboardService {
 
         return virtualAccountVO;
     }
+
 }
 

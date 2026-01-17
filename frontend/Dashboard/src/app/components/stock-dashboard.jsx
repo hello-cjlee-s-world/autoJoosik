@@ -1,5 +1,5 @@
 import { TrendingUp, TrendingDown, DollarSign, Activity } from 'lucide-react';
-import assetService from "@/app/services/stockDashboardService.jsx";
+import stockDashboardService from "@/app/services/stockDashboardService.jsx";
 import {useEffect, useMemo, useState} from "react";
 import {constants} from "@/app/libs/constants.js";
 
@@ -16,8 +16,8 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
 
   const dataLoad = async () => {
     try {
-      const assetResponse = await assetService().getAssetList()
-      const accountResponse = await assetService().getAccount()
+      const assetResponse = await stockDashboardService().getAssetList()
+      const accountResponse = await stockDashboardService().getAccount()
       if(assetResponse.status === constants.RESULT_SUCCESS){
         console.log(assetResponse.body)
         setAssetList(assetResponse.body)
