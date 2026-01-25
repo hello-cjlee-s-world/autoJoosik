@@ -19,7 +19,6 @@ export function StockDashboard({ stocks, cash, onStockClick }) {
       const assetResponse = await stockDashboardService().getAssetList()
       const accountResponse = await stockDashboardService().getAccount()
       if(assetResponse.status === constants.RESULT_SUCCESS){
-        console.log(assetResponse.body)
         setAssetList(assetResponse.body)
       }
       if(accountResponse.status === constants.RESULT_SUCCESS){

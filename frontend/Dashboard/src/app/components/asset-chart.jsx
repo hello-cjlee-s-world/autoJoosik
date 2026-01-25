@@ -6,12 +6,31 @@ import { useEffect,useState } from "react";
 export function AssetChart({ data }) {
   const [assetDailyList, setAssetDailyList] = useState([])
 
+  const parseStringDate = (dateString) => {
+    const d = new Date(dateString)
+    const year = d.getFullYear()
+    const month =  d.getMonth() + 1
+    const day =  d.getDate()
+
+    return `${year}-${month}-${day}`
+  }
+
   const dataLoad = async () => {
     try {
       const response = await assetChartService().getAssetDailyList()
       if(response.status === constants.RESULT_SUCCESS){
-        console.log(response.body)
-        setAssetDailyList(response.body)
+        const tmpList = []
+        if(response.body) {
+          response.body.forEach(data => {
+            tmpList.push({
+              baseDate: parseStringDate(data.baseDate),
+              totalAssets: data.totalAssets,
+              stockValue: data.stockValue,
+              cashBalance: data.cashBalance
+            })
+          })
+        }
+        setAssetDailyList(tmpList)
       }
     } catch (e) {
       console.log(e)
@@ -27,10 +46,10 @@ export function AssetChart({ data }) {
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-xl font-bold text-gray-900 mb-6">자산 추이</h2>
       <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={data}>
+        <AreaChart data={assetDailyList}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis 
-            dataKey="date" 
+            dataKey="baseDate"
             stroke="#6b7280"
             style={{ fontSize: '12px' }}
           />
@@ -69,7 +88,7 @@ export function AssetChart({ data }) {
           />
           <Area 
             type="monotone" 
-            dataKey="cash" 
+            dataKey="cashBalance"
             stackId="2"
             stroke="#10b981" 
             fill="#10b981"
