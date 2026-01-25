@@ -1,6 +1,31 @@
-import { TrendingUp, TrendingDown, Plus } from 'lucide-react';
+import {Plus, TrendingDown, TrendingUp} from 'lucide-react';
+import {constants} from "@/app/libs/constants.js";
+import {useEffect, useState} from "react";
+import marketListService from "@/app/services/marketListService.jsx";
 
 export function MarketList({ stocks, onBuy }) {
+  const [stockInfoList, setStockInfoList] = useState([])
+
+  const dataLoad = async () => {
+    try {
+      const response = await marketListService().getStockInfoList()
+      if(response.status === constants.RESULT_SUCCESS) {
+        if (response.body) {
+          console.log(response.body)
+          setStockInfoList(response.body)
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    dataLoad()
+  }, []);
+
+
+
   return (
     <div className="bg-white rounded-lg shadow">
       <div className="p-6 border-b border-gray-200">

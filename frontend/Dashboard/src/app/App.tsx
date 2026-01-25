@@ -92,13 +92,7 @@ export default function App() {
   ]);
 
   const [selectedStock, setSelectedStock] = useState(null);
-  const [assetHistory, setAssetHistory] = useState([
-    { date: '01/05', totalAssets: 10000000, stockValue: 0, cash: 10000000 },
-    { date: '01/06', totalAssets: 10500000, stockValue: 1000000, cash: 9500000 },
-    { date: '01/07', totalAssets: 11200000, stockValue: 1700000, cash: 9500000 },
-    { date: '01/08', totalAssets: 12000000, stockValue: 2500000, cash: 9500000 },
-    { date: '01/09', totalAssets: 13050000, stockValue: 3550000, cash: 9500000 },
-  ]);
+
 
   const [marketStocks] = useState([
     { symbol: 'LG전자', name: 'LG Electronics', currentPrice: 95000, change: 2000, changePercent: 2.15, volume: 1234567 },
@@ -241,7 +235,6 @@ export default function App() {
       stockValue,
       cash: newCash
     };
-    setAssetHistory(prev => [...prev.slice(-4), newAssetData]);
   };
 
   const handleStockClick = (stock) => {
@@ -358,7 +351,7 @@ export default function App() {
               cash={cash}
               onStockClick={handleStockClick}
             />
-            <AssetChart data={assetHistory} />
+            <AssetChart/>
           </div>
         )}
 
