@@ -2,6 +2,8 @@ package org.cjlee.auto.autojoosik.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.cjlee.auto.autojoosik.autojoosik.transactionHistory.bean.VirtualTradeLogVO;
+import org.cjlee.auto.autojoosik.common.LocalDateTimePersistenceConverter;
 
 import java.time.LocalDateTime;
 
@@ -50,5 +52,25 @@ public class VirtualTradeLogEntity {
     private float taxAmount;
 
     @Column(name = "created_at")
+    @Convert(converter = LocalDateTimePersistenceConverter.class)
     private LocalDateTime createdAt;
+
+    public VirtualTradeLogVO toVirtualTradeLog() {
+        VirtualTradeLogVO vo = new VirtualTradeLogVO();
+        vo.setTradeId(this.getTradeId());
+        vo.setOrderId(this.getOrderId());
+        vo.setUserId(this.getUserId());
+        vo.setAccountId(this.getAccountId());
+        vo.setStkCd(this.getStkCd());
+        vo.setMarket(this.getMarket());
+        vo.setSide(this.getSide());
+        vo.setFilledQty(this.getFilledQty());
+        vo.setFilledPrice(this.getFilledPrice());
+        vo.setFilledAmount(this.getFilledAmount());
+        vo.setFeeAmount(this.getFeeAmount());
+        vo.setTaxAmount(this.getTaxAmount());
+        vo.setCreatedAt(this.getCreatedAt());
+
+        return vo;
+    }
 }

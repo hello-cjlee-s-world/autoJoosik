@@ -357,7 +357,6 @@ export default function App() {
 
         {activeTab === 'market' && (
           <MarketList 
-            stocks={marketStocks}
             onBuy={handleMarketBuy}
           />
         )}

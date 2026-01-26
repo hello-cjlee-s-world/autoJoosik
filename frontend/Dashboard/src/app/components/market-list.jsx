@@ -11,7 +11,6 @@ export function MarketList({ onBuy }) {
       const response = await marketListService().getStockInfoList()
       if(response.status === constants.RESULT_SUCCESS) {
         if (response.body) {
-          console.log(response.body)
           setStocks(response.body)
         }
       }
@@ -23,8 +22,6 @@ export function MarketList({ onBuy }) {
   useEffect(() => {
     dataLoad()
   }, []);
-
-
 
   return (
     <div className="bg-white rounded-lg shadow">

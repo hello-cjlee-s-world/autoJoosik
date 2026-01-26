@@ -39,7 +39,6 @@ public class StockDashboardService {
       QVirtualAssetEntity assetEntity = QVirtualAssetEntity.virtualAssetEntity;
       QTradeInfoLogEntity tradeInfoLogEntity = QTradeInfoLogEntity.tradeInfoLogEntity;
 
-
         List<VirtualAssetDTO> dtoList = queryFactory
                 .select(Projections.fields(
                         VirtualAssetDTO.class,

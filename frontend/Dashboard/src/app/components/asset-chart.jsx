@@ -3,7 +3,7 @@ import assetChartService from "@/app/services/assetChartService.jsx";
 import {constants} from "@/app/libs/constants.js";
 import { useEffect,useState } from "react";
 
-export function AssetChart({ data }) {
+export function AssetChart() {
   const [assetDailyList, setAssetDailyList] = useState([])
 
   const parseStringDate = (dateString) => {
