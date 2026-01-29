@@ -11,35 +11,6 @@ import { Briefcase, TrendingUp, History, ShoppingCart, Database } from 'lucide-r
 export default function App() {
   const [activeTab, setActiveTab] = useState('portfolio');
   const [cash, setCash] = useState(10000000); // 초기 자금 1000만원
-  const [stocks, setStocks] = useState([
-    { symbol: '삼성전자', name: 'Samsung Electronics', shares: 10, avgPrice: 70000, currentPrice: 75000 },
-    { symbol: 'SK하이닉스', name: 'SK Hynix', shares: 5, avgPrice: 120000, currentPrice: 125000 },
-    { symbol: 'NAVER', name: 'NAVER Corporation', shares: 8, avgPrice: 200000, currentPrice: 210000 },
-  ]);
-  const [transactions, setTransactions] = useState([
-    {
-      id: '1',
-      date: '2026-01-08',
-      time: '14:30',
-      symbol: '삼성전자',
-      name: 'Samsung Electronics',
-      type: 'buy',
-      shares: 10,
-      price: 70000,
-      total: 700000
-    },
-    {
-      id: '2',
-      date: '2026-01-07',
-      time: '11:15',
-      symbol: 'SK하이닉스',
-      name: 'SK Hynix',
-      type: 'buy',
-      shares: 5,
-      price: 120000,
-      total: 600000
-    },
-  ]);
 
   // 자동 거래 상태
   const [autoTradingEnabled, setAutoTradingEnabled] = useState(false);
@@ -93,30 +64,6 @@ export default function App() {
 
   const [selectedStock, setSelectedStock] = useState(null);
 
-
-  const [marketStocks] = useState([
-    { symbol: 'LG전자', name: 'LG Electronics', currentPrice: 95000, change: 2000, changePercent: 2.15, volume: 1234567 },
-    { symbol: '현대차', name: 'Hyundai Motor', currentPrice: 185000, change: -3000, changePercent: -1.59, volume: 987654 },
-    { symbol: '카카오', name: 'Kakao', currentPrice: 52000, change: 1500, changePercent: 2.97, volume: 2345678 },
-    { symbol: 'POSCO', name: 'POSCO Holdings', currentPrice: 410000, change: 5000, changePercent: 1.23, volume: 456789 },
-    { symbol: '셀트리온', name: 'Celltrion', currentPrice: 165000, change: -2500, changePercent: -1.49, volume: 876543 },
-    { symbol: '삼성바이오', name: 'Samsung Biologics', currentPrice: 890000, change: 10000, changePercent: 1.14, volume: 234567 },
-  ]);
-
-  // 주식 현재가 업데이트 (시뮬레이션)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStocks(prevStocks => 
-        prevStocks.map(stock => ({
-          ...stock,
-          currentPrice: stock.currentPrice + (Math.random() - 0.5) * 1000
-        }))
-      );
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   // 장 시간 체크
   useEffect(() => {
     const checkMarketHours = () => {
@@ -167,75 +114,6 @@ export default function App() {
 
     return () => clearInterval(interval);
   }, [autoTradingEnabled, isMarketOpen]);
-
-  const handleTrade = (symbol, shares, price, type) => {
-    const totalAmount = shares * price;
-    
-    if (type === 'buy') {
-      if (totalAmount > cash) {
-        alert('현금이 부족합니다');
-        return;
-      }
-      
-      setCash(prev => prev - totalAmount);
-      
-      setStocks(prevStocks => {
-        const existingStock = prevStocks.find(s => s.symbol === symbol);
-        if (existingStock) {
-          const newShares = existingStock.shares + shares;
-          const newAvgPrice = ((existingStock.avgPrice * existingStock.shares) + totalAmount) / newShares;
-          return prevStocks.map(s => 
-            s.symbol === symbol 
-              ? { ...s, shares: newShares, avgPrice: newAvgPrice }
-              : s
-          );
-        } else {
-          const stock = selectedStock;
-          if (!stock) return prevStocks;
-          return [...prevStocks, {
-            symbol,
-            name: stock.name,
-            shares,
-            avgPrice: price,
-            currentPrice: price
-          }];
-        }
-      });
-    } else {
-      setCash(prev => prev + totalAmount);
-      
-      setStocks(prevStocks => 
-        prevStocks
-          .map(s => s.symbol === symbol ? { ...s, shares: s.shares - shares } : s)
-          .filter(s => s.shares > 0)
-      );
-    }
-
-    // 거래 내역 추가
-    const now = new Date();
-    const newTransaction = {
-      id: Date.now().toString(),
-      date: now.toISOString().split('T')[0],
-      time: now.toTimeString().slice(0, 5),
-      symbol,
-      name: selectedStock?.name || symbol,
-      type,
-      shares,
-      price,
-      total: totalAmount
-    };
-    setTransactions(prev => [newTransaction, ...prev]);
-
-    // 자산 히스토리 업데이트
-    const stockValue = stocks.reduce((sum, s) => sum + (s.shares * s.currentPrice), 0);
-    const newCash = type === 'buy' ? cash - totalAmount : cash + totalAmount;
-    const newAssetData = {
-      date: now.toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit' }),
-      totalAssets: stockValue + newCash,
-      stockValue,
-      cash: newCash
-    };
-  };
 
   const handleStockClick = (stock) => {
     setSelectedStock(stock);
@@ -347,8 +225,6 @@ export default function App() {
         {activeTab === 'portfolio' && (
           <div className="space-y-6">
             <StockDashboard 
-              stocks={stocks}
-              cash={cash}
               onStockClick={handleStockClick}
             />
             <AssetChart/>
@@ -362,7 +238,7 @@ export default function App() {
         )}
 
         {activeTab === 'history' && (
-          <TransactionHistory transactions={transactions} />
+          <TransactionHistory/>
         )}
 
         {activeTab === 'data' && (

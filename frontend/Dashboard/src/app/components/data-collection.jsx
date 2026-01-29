@@ -8,57 +8,6 @@ export function DataCollection({ dataPoints, isCollecting }) {
 
   return (
     <div className="space-y-6">
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">수집 상태</span>
-            <Activity className={`w-5 h-5 ${isCollecting ? 'text-green-600' : 'text-gray-400'}`} />
-          </div>
-          <div className="text-2xl font-bold text-gray-900">
-            {isCollecting ? '수집 중' : '대기 중'}
-          </div>
-          {isCollecting && (
-            <div className="mt-2 flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-500">실시간 수집</span>
-            </div>
-          )}
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">총 수집</span>
-            <Database className="w-5 h-5 text-blue-600" />
-          </div>
-          <div className="text-2xl font-bold text-gray-900">
-            {totalCount.toLocaleString()}
-          </div>
-          <div className="text-xs text-gray-500 mt-1">건</div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">성공/실패</span>
-            <CheckCircle className="w-5 h-5 text-green-600" />
-          </div>
-          <div className="text-2xl font-bold text-gray-900">
-            {successCount} / {failedCount}
-          </div>
-          <div className="text-xs text-gray-500 mt-1">건</div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">성공률</span>
-            <Activity className="w-5 h-5 text-purple-600" />
-          </div>
-          <div className="text-2xl font-bold text-gray-900">
-            {successRate}%
-          </div>
-        </div>
-      </div>
-
       {/* Data Collection Table */}
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 border-b border-gray-200">

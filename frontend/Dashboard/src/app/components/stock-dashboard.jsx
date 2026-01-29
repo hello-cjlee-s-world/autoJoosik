@@ -3,7 +3,7 @@ import stockDashboardService from "@/app/services/stockDashboardService.jsx";
 import {useEffect, useMemo, useState} from "react";
 import {constants} from "@/app/libs/constants.js";
 
-export function StockDashboard({ stocks, cash, onStockClick }) {
+export function StockDashboard({ onStockClick }) {
   const [assetList, setAssetList] = useState([])
   const [account, setAccount] = useState({})
   // cash_balance + total_eval
