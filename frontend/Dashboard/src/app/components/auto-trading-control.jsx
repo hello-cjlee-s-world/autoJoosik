@@ -1,12 +1,44 @@
 import { Power, Clock, TrendingUp, Settings } from 'lucide-react';
+import {useEffect, useState} from "react";
+import autoTradingControlService from "@/app/services/autoTradingControlService.jsx";
 
 export function AutoTradingControl({ 
-  isEnabled, 
-  isMarketOpen, 
-  marketOpenTime, 
+  marketOpenTime,
   marketCloseTime,
   onToggle 
 }) {
+
+  const [isHealthy, setIsHealthy] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const check = async () => {
+      try {
+        const { ok } = await autoTradingControlService().healthCheck();
+        const { running } = await autoTradingControlService().runningCheck();
+        if (mounted) {
+          setIsHealthy(Boolean(ok));
+          setIsRunning(Boolean(running))
+        }
+      } catch (e) {
+        if (mounted) {
+          setIsHealthy(false);
+          setIsRunning(false);
+        }
+      }
+    };
+
+    check(); // 즉시 1회
+    const id = setInterval(check, 5000);
+
+    return () => {
+      mounted = false;
+      clearInterval(id);
+    };
+  }, []);
+
   return (
     <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg shadow-lg p-6 text-white">
       <div className="flex items-center justify-between mb-6">
@@ -22,15 +54,15 @@ export function AutoTradingControl({
         <button
           onClick={onToggle}
           className={`relative inline-flex h-14 w-28 items-center rounded-full transition-colors ${
-            isEnabled ? 'bg-green-500' : 'bg-gray-400'
+            isHealthy ? 'bg-green-500' : 'bg-gray-400'
           }`}
         >
           <span
             className={`inline-block h-12 w-12 transform rounded-full bg-white shadow-lg transition-transform ${
-              isEnabled ? 'translate-x-14' : 'translate-x-1'
+              isHealthy ? 'translate-x-14' : 'translate-x-1'
             }`}
           >
-            <Power className={`w-full h-full p-3 ${isEnabled ? 'text-green-500' : 'text-gray-400'}`} />
+            <Power className={`w-full h-full p-3 ${isHealthy ? 'text-green-500' : 'text-gray-400'}`} />
           </span>
         </button>
       </div>
@@ -43,9 +75,9 @@ export function AutoTradingControl({
             <span className="text-sm font-medium">시스템 상태</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${isEnabled ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></div>
+            <div className={`w-2 h-2 rounded-full ${isHealthy ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></div>
             <span className="text-lg font-bold">
-              {isEnabled ? '활성화' : '비활성화'}
+              {isHealthy ? '활성화' : '비활성화'}
             </span>
           </div>
         </div>
@@ -57,9 +89,9 @@ export function AutoTradingControl({
             <span className="text-sm font-medium">장 상태</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${isMarketOpen ? 'bg-green-400 animate-pulse' : 'bg-orange-400'}`}></div>
+            <div className={`w-2 h-2 rounded-full ${isRunning ? 'bg-green-400 animate-pulse' : 'bg-orange-400'}`}></div>
             <span className="text-lg font-bold">
-              {isMarketOpen ? '장중' : '장마감'}
+              {isRunning ? '장중' : '장마감'}
             </span>
           </div>
         </div>
@@ -79,8 +111,8 @@ export function AutoTradingControl({
       {/* Info Message */}
       <div className="mt-4 bg-white/10 backdrop-blur-sm rounded-lg p-4">
         <p className="text-sm text-blue-100">
-          {isEnabled ? (
-            isMarketOpen ? (
+          {isHealthy ? (
+            isRunning ? (
               <span className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                 자동 거래가 활성화되어 실시간으로 데이터를 수집하고 거래를 실행합니다.
