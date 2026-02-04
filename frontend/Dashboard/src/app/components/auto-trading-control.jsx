@@ -2,24 +2,33 @@ import { Power, Clock, TrendingUp, Settings } from 'lucide-react';
 import {useEffect, useState} from "react";
 import autoTradingControlService from "@/app/services/autoTradingControlService.jsx";
 
-export function AutoTradingControl({ 
-  marketOpenTime,
-  marketCloseTime,
-  onToggle 
-}) {
-
+export function AutoTradingControl({}) {
   const [isHealthy, setIsHealthy] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+
+  const handleAutoTradingToggle = async () => {
+    try {
+      const service = autoTradingControlService();
+      const { enabled, running } = await (
+        isRunning ? service.schedulerStop() : service.schedulerStart()
+      );
+
+      setIsHealthy(!!enabled);
+      setIsRunning(!!running);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
 
   useEffect(() => {
     let mounted = true;
 
-    const check = async () => {
+    const healthCheck = async () => {
       try {
-        const { ok } = await autoTradingControlService().healthCheck();
-        const { running } = await autoTradingControlService().runningCheck();
+        const {enabled, running} = await autoTradingControlService().healthCheck();
         if (mounted) {
-          setIsHealthy(Boolean(ok));
+          setIsHealthy(Boolean(enabled));
           setIsRunning(Boolean(running))
         }
       } catch (e) {
@@ -30,8 +39,8 @@ export function AutoTradingControl({
       }
     };
 
-    check(); // 즉시 1회
-    const id = setInterval(check, 5000);
+    healthCheck(); // 즉시 1회
+    const id = setInterval(healthCheck, 5000);
 
     return () => {
       mounted = false;
@@ -52,8 +61,8 @@ export function AutoTradingControl({
           </div>
         </div>
         <button
-          onClick={onToggle}
-          className={`relative inline-flex h-14 w-28 items-center rounded-full transition-colors ${
+          onClick={handleAutoTradingToggle}
+          className={`relative inline-flex h-14 w-28 items-center rounded-full transition-colors cursor-pointer ${
             isHealthy ? 'bg-green-500' : 'bg-gray-400'
           }`}
         >
@@ -103,7 +112,7 @@ export function AutoTradingControl({
             <span className="text-sm font-medium">거래 시간</span>
           </div>
           <div className="text-lg font-bold">
-            {marketOpenTime} - {marketCloseTime}
+            09:01 - 15:10
           </div>
         </div>
       </div>
@@ -120,7 +129,7 @@ export function AutoTradingControl({
             ) : (
               <span className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                장 시작 시간({marketOpenTime})에 자동으로 거래를 시작합니다.
+                장 시작 시간(09:01)에 자동으로 거래를 시작합니다.
               </span>
             )
           ) : (

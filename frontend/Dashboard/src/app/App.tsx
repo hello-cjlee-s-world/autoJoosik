@@ -13,7 +13,6 @@ export default function App() {
   const [cash, setCash] = useState(10000000); // 초기 자금 1000만원
 
   // 자동 거래 상태
-  const [autoTradingEnabled, setAutoTradingEnabled] = useState(false);
   const [isMarketOpen, setIsMarketOpen] = useState(false);
   const marketOpenTime = '09:00';
   const marketCloseTime = '15:30';
@@ -86,34 +85,34 @@ export default function App() {
   }, []);
 
   // 자동 데이터 수집 (자동 거래가 활성화되고 장이 열렸을 때)
-  useEffect(() => {
-    if (!autoTradingEnabled || !isMarketOpen) return;
-
-    const interval = setInterval(() => {
-      const now = new Date();
-      const timestamp = now.toISOString().replace('T', ' ').slice(0, 19);
-      
-      // 랜덤 종목 선택
-      const symbols = ['삼성전자', 'SK하이닉스', 'NAVER', 'LG전자', '현대차', '카카오'];
-      const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
-      const basePrice = Math.floor(Math.random() * 200000) + 50000;
-      
-      const newDataPoint = {
-        id: Date.now().toString(),
-        timestamp,
-        symbol: randomSymbol,
-        price: basePrice,
-        volume: Math.floor(Math.random() * 1000000) + 100000,
-        bid: basePrice - Math.floor(Math.random() * 500),
-        ask: basePrice + Math.floor(Math.random() * 500),
-        status: Math.random() > 0.1 ? 'success' : 'failed'
-      };
-
-      setDataPoints(prev => [newDataPoint, ...prev.slice(0, 49)]); // 최대 50개까지 유지
-    }, 10000); // 10초마다 데이터 수집
-
-    return () => clearInterval(interval);
-  }, [autoTradingEnabled, isMarketOpen]);
+  // useEffect(() => {
+    // if (!autoTradingEnabled || !isMarketOpen) return;
+  //
+  //   const interval = setInterval(() => {
+  //     const now = new Date();
+  //     const timestamp = now.toISOString().replace('T', ' ').slice(0, 19);
+  //
+  //     // 랜덤 종목 선택
+  //     const symbols = ['삼성전자', 'SK하이닉스', 'NAVER', 'LG전자', '현대차', '카카오'];
+  //     const randomSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+  //     const basePrice = Math.floor(Math.random() * 200000) + 50000;
+  //
+  //     const newDataPoint = {
+  //       id: Date.now().toString(),
+  //       timestamp,
+  //       symbol: randomSymbol,
+  //       price: basePrice,
+  //       volume: Math.floor(Math.random() * 1000000) + 100000,
+  //       bid: basePrice - Math.floor(Math.random() * 500),
+  //       ask: basePrice + Math.floor(Math.random() * 500),
+  //       status: Math.random() > 0.1 ? 'success' : 'failed'
+  //     };
+  //
+  //     setDataPoints(prev => [newDataPoint, ...prev.slice(0, 49)]); // 최대 50개까지 유지
+  //   }, 10000); // 10초마다 데이터 수집
+  //
+  //   return () => clearInterval(interval);
+  // }, [autoTradingEnabled, isMarketOpen]);
 
   const handleStockClick = (stock) => {
     setSelectedStock(stock);
@@ -127,10 +126,6 @@ export default function App() {
       avgPrice: price,
       currentPrice: price
     });
-  };
-
-  const handleAutoTradingToggle = () => {
-    setAutoTradingEnabled(prev => !prev);
   };
 
   return (
@@ -158,13 +153,7 @@ export default function App() {
       {/* Auto Trading Control */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <AutoTradingControl
-            isEnabled={autoTradingEnabled}
-            isMarketOpen={isMarketOpen}
-            marketOpenTime={marketOpenTime}
-            marketCloseTime={marketCloseTime}
-            onToggle={handleAutoTradingToggle}
-          />
+          <AutoTradingControl/>
         </div>
       </div>
 
@@ -244,7 +233,7 @@ export default function App() {
         {activeTab === 'data' && (
           <DataCollection 
             dataPoints={dataPoints}
-            isCollecting={autoTradingEnabled && isMarketOpen}
+            // isCollecting={autoTradingEnabled && isMarketOpen}
           />
         )}
       </main>

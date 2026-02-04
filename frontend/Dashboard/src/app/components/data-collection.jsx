@@ -1,6 +1,6 @@
 import { Database, CheckCircle, XCircle, Clock, Activity } from 'lucide-react';
 
-export function DataCollection({ dataPoints, isCollecting }) {
+export function DataCollection({ dataPoints }) {
   const successCount = dataPoints.filter(d => d.status === 'success').length;
   const failedCount = dataPoints.filter(d => d.status === 'failed').length;
   const totalCount = dataPoints.length;
