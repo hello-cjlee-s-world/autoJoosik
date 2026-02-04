@@ -29,7 +29,6 @@ export function StockDashboard({ onStockClick }) {
     }
   }
 
-
   useEffect(() => {
       dataLoad()
   }, []);

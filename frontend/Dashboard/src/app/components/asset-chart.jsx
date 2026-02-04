@@ -30,6 +30,8 @@ export function AssetChart() {
             })
           })
         }
+        console.log(response.body)
+        console.log(tmpList)
         setAssetDailyList(tmpList)
       }
     } catch (e) {
