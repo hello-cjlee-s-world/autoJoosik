@@ -1,10 +1,50 @@
 import { Database, CheckCircle, XCircle, Clock, Activity } from 'lucide-react';
+import marketListService from "@/app/services/marketListService.jsx";
+import {constants} from "@/app/libs/constants.js";
+import {useEffect, useState} from "react";
 
-export function DataCollection({ dataPoints }) {
-  const successCount = dataPoints.filter(d => d.status === 'success').length;
-  const failedCount = dataPoints.filter(d => d.status === 'failed').length;
-  const totalCount = dataPoints.length;
-  const successRate = totalCount > 0 ? (successCount / totalCount * 100).toFixed(1) : '0.0';
+export function DataCollection({ isRunning }) {
+  const [stockInfoList, setStockInfoList] = useState([]);
+
+  const toDateFormat = (time) => {
+    const date = new Date(time)
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}
+     ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}:${String(date.getSeconds()).padStart(2,'0')}`
+  }
+
+  const setSuccess = (time) => {
+    const target = new Date(time).getTime()
+    const now = Date.now()
+
+    const diffMs = Math.abs(now - target)
+    const TEN_MIN = 10 * 60 * 1000
+
+    return diffMs <= TEN_MIN
+  }
+
+  const dataLoad = async () => {
+    try {
+      const response = await marketListService().getStockInfoList()
+      if(response.status === constants.RESULT_SUCCESS) {
+        if (response.body) {
+          setStockInfoList(response.body)
+        }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    dataLoad()
+    const id = setInterval(() => {
+      dataLoad()
+    }, 60 * 1000)
+
+    return () => {
+      clearInterval(id)
+    }
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -27,50 +67,48 @@ export function DataCollection({ dataPoints }) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {dataPoints.length === 0 ? (
+              {stockInfoList.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
                     수집된 데이터가 없습니다
                   </td>
                 </tr>
               ) : (
-                dataPoints.map((data) => (
+                stockInfoList.map((data) => (
                   <tr key={data.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {data.timestamp}
+                      {data.updatedAt ? toDateFormat(data.updatedAt):'-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900">{data.symbol}</div>
+                      <div className="font-medium text-gray-900">{data.stkNm}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">
-                      ₩{data.price.toLocaleString()}
+                      ₩{data.curPrc ? data.curPrc.replace('-','').replace('+','').toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900">
-                      {data.volume.toLocaleString()}
+                      {data.trdeQty ? data.trdeQty.replace('-','').replace('+','').toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-blue-600">
-                      ₩{data.bid.toLocaleString()}
+                      {/*₩{data.bid.toLocaleString()}*/}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-red-600">
-                      ₩{data.ask.toLocaleString()}
+                      {/*₩{data.ask.toLocaleString()}*/}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                      {data.status === 'success' && (
+                      {!isRunning ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                          <Clock className="w-3 h-3" />
+                          대기
+                        </span>
+                      ) : setSuccess(data.updatedAt) ? (
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           <CheckCircle className="w-3 h-3" />
                           성공
                         </span>
-                      )}
-                      {data.status === 'failed' && (
+                      ) : (
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
                           <XCircle className="w-3 h-3" />
                           실패
-                        </span>
-                      )}
-                      {data.status === 'pending' && (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                          <Clock className="w-3 h-3" />
-                          대기
                         </span>
                       )}
                     </td>

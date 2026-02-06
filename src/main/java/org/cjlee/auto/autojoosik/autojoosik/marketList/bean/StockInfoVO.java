@@ -2,6 +2,8 @@ package org.cjlee.auto.autojoosik.autojoosik.marketList.bean;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class StockInfoVO {
 //    private String id;
@@ -50,4 +52,5 @@ public class StockInfoVO {
     private String favUnit;
     private String dstrStk;
     private String dstrRt;
+    private LocalDateTime updatedAt;
 }

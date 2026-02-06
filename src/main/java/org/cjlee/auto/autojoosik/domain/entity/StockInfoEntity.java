@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.cjlee.auto.autojoosik.autojoosik.marketList.bean.StockInfoVO;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Table(name = "tb_stock_info")
@@ -149,6 +151,9 @@ public class StockInfoEntity {
     @Column(name = "dstr_rt")
     private String dstrRt;
 
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     public StockInfoVO toStockInfo() {
         StockInfoVO vo = new StockInfoVO();
 //        vo.setId(this.id);
@@ -197,6 +202,7 @@ public class StockInfoEntity {
         vo.setFavUnit(this.favUnit);
         vo.setDstrStk(this.dstrStk);
         vo.setDstrRt(this.dstrRt);
+        vo.setUpdatedAt(this.updatedAt);
 
         return vo;
     }

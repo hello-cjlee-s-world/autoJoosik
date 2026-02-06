@@ -2,9 +2,9 @@ import { Power, Clock, TrendingUp, Settings } from 'lucide-react';
 import {useEffect, useState} from "react";
 import autoTradingControlService from "@/app/services/autoTradingControlService.jsx";
 
-export function AutoTradingControl({}) {
+export function AutoTradingControl({isRunning, setIsRunning}) {
   const [isHealthy, setIsHealthy] = useState(false);
-  const [isRunning, setIsRunning] = useState(false);
+  // const [isRunning, setIsRunning] = useState(false);
 
   const handleAutoTradingToggle = async () => {
     try {
