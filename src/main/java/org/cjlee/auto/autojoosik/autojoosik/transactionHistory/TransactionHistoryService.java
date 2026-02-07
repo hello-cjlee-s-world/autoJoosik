@@ -26,10 +26,13 @@ public class TransactionHistoryService {
     @PersistenceContext
     private EntityManager em;
 
-    public List<TransactionHistoryDTO> getStockInfoList() {
+    public List<TransactionHistoryDTO> getStockInfoList(int page, int size) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
         QVirtualTradeLogEntity virtualTradeLogEntity = QVirtualTradeLogEntity.virtualTradeLogEntity;
         QStockInfoEntity stockInfoEntity = QStockInfoEntity.stockInfoEntity;
+
+        int safePage = Math.max(page, 0);
+        int safeSize = Math.max(size, 1);
 
         List<TransactionHistoryDTO> dtoList = queryFactory
                 .select(Projections.fields(
@@ -52,7 +55,8 @@ public class TransactionHistoryService {
                 .from(virtualTradeLogEntity)
                 .leftJoin(stockInfoEntity).on(virtualTradeLogEntity.stkCd.eq(stockInfoEntity.stkCd))
                 .orderBy(virtualTradeLogEntity.createdAt.desc())
-                .limit(10)
+                .offset((long) safePage * safeSize)
+                .limit(safeSize)
                 .fetch();
 
         return dtoList;
