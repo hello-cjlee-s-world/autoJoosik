@@ -1,5 +1,7 @@
 package org.cjlee.auto.autojoosik.autojoosik.assetChart;
 
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.cjlee.auto.autojoosik.domain.repository.VirtualAssetDailyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -22,7 +25,17 @@ public class AssetChartService {
     private final VirtualAssetDailyRepository virtualAssetDailyRepository;
 
     public List<VirtualAssetDailyVO> getAssetDaily() {
-        List<VirtualAssetDailyEntity> entityList = virtualAssetDailyRepository.findAll();
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+        QVirtualAssetDailyEntity virtualAssetDailyEntity = QVirtualAssetDailyEntity.virtualAssetDailyEntity;
+
+        List<VirtualAssetDailyEntity> entityList = queryFactory
+                .selectFrom(virtualAssetDailyEntity)
+                .orderBy(virtualAssetDailyEntity.baseDate.desc())
+                .limit(30)
+                .fetch();
+
+        entityList.sort(Comparator.comparing(VirtualAssetDailyEntity::getBaseDate));
+
         List<VirtualAssetDailyVO> voList = new ArrayList<>();
         if(!entityList.isEmpty()) {
             for(VirtualAssetDailyEntity entity : entityList){
