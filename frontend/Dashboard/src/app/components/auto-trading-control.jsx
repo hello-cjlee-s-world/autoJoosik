@@ -112,7 +112,7 @@ export function AutoTradingControl({isRunning, setIsRunning}) {
             <span className="text-sm font-medium">거래 시간</span>
           </div>
           <div className="text-lg font-bold">
-            09:01 - 15:10
+            09:00 - 15:30
           </div>
         </div>
       </div>
@@ -129,7 +129,7 @@ export function AutoTradingControl({isRunning, setIsRunning}) {
             ) : (
               <span className="flex items-center gap-2">
                 <Clock className="w-4 h-4" />
-                장 시작 시간(09:01)에 자동으로 거래를 시작합니다.
+                장 시작 시간(09:00)에 자동으로 거래를 시작합니다.
               </span>
             )
           ) : (
