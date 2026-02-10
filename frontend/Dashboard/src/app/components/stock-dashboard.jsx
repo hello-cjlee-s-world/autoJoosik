@@ -3,7 +3,7 @@ import stockDashboardService from "@/app/services/stockDashboardService.jsx";
 import {useEffect, useMemo, useState} from "react";
 import {constants} from "@/app/libs/constants.js";
 
-export function StockDashboard({ onStockClick }) {
+export function StockDashboard({ onStockClick, cash, setCash }) {
   const [assetList, setAssetList] = useState([])
   const [account, setAccount] = useState({})
   // cash_balance + total_eval
@@ -23,6 +23,7 @@ export function StockDashboard({ onStockClick }) {
       }
       if(accountResponse.status === constants.RESULT_SUCCESS){
         setAccount(accountResponse.body)
+        setCash(accountResponse.body.cashBalance)
       }
     } catch (e) {
       console.log(e)
@@ -30,7 +31,14 @@ export function StockDashboard({ onStockClick }) {
   }
 
   useEffect(() => {
+    dataLoad()
+    const id = setInterval(() => {
       dataLoad()
+    }, 5 * 1000)
+
+    return () => {
+      clearInterval(id)
+    }
   }, []);
 
   return (
@@ -112,10 +120,10 @@ export function StockDashboard({ onStockClick }) {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {assetList.map((asset) => {
-                const value = asset.shares * asset.currentPrice;
-                const cost = asset.shares * asset.avgPrice;
-                const gain = value - cost;
-                const gainPercent = (gain / cost) * 100;
+                // const value = asset.shares * asset.lastPrice;
+                // const cost = asset.shares * asset.avgPrice;
+                // const gain = value - cost;
+                // const gainPercent = (gain / cost) * 100;
 
                 return (
                   <tr
@@ -142,7 +150,7 @@ export function StockDashboard({ onStockClick }) {
                       ₩{asset.evalAmount ? asset.evalAmount.toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 text-right text-sm">
-                      <div className={gainPercent >= 0 ? 'text-green-600' : 'text-red-600'}>
+                      <div className={asset.evalPlRate >= 0 ? 'text-green-600' : 'text-red-600'}>
                         <div className="font-medium">
                           {asset.evalPlRate && (asset.evalPlRate >= 0) ? '+' : ''}{asset.evalPlRate ? parseFloat(asset.evalPlRate).toFixed(2) : "-"}%
                         </div>

@@ -10,7 +10,7 @@ import { Briefcase, TrendingUp, History, ShoppingCart, Database } from 'lucide-r
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('portfolio');
-  const [cash, setCash] = useState(10000000); // 초기 자금 1000만원
+  const [cash, setCash] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [selectedStock, setSelectedStock] = useState(null);
 
@@ -18,13 +18,14 @@ export default function App() {
     setSelectedStock(stock);
   };
 
-  const handleMarketBuy = (symbol, name, price) => {
+  const handleMarketBuy = (symbol, name, price,stkCd) => {
     setSelectedStock({
       symbol,
       name,
+      stkCd,
       shares: 0,
-      avgPrice: price,
-      currentPrice: price
+      avgPrc: price,
+      curPrc: price
     });
   };
 
@@ -115,6 +116,8 @@ export default function App() {
           <div className="space-y-6">
             <StockDashboard 
               onStockClick={handleStockClick}
+              cash={cash}
+              setCash={setCash}
             />
             <AssetChart/>
           </div>
@@ -141,7 +144,7 @@ export default function App() {
           stock={selectedStock}
           cash={cash}
           onClose={() => setSelectedStock(null)}
-          onTrade={handleTrade}
+          // onTrade={handleTrade}
         />
       )}
     </div>

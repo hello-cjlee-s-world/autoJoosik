@@ -55,9 +55,9 @@ export function MarketList({ onBuy }) {
                 </div>
               </div>
               <button
-                onClick={() => onBuy(stock.symbol, stock.name, stock.currentPrice)}
+                onClick={() => onBuy(stock.stkNm, stock.stkNm, stock.curPrc, stock.stkCd)}
                 className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                aria-label={`${stock.symbol} 매수`}
+                aria-label={`${stock.stkNm} 매수`}
               >
                 <Plus className="w-5 h-5" />
               </button>
