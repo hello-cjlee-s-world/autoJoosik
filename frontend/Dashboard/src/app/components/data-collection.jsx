@@ -61,8 +61,8 @@ export function DataCollection({ isRunning }) {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">종목</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">현재가</th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">거래량</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">매수호가</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">매도호가</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">고가</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">저가</th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">상태</th>
               </tr>
             </thead>
@@ -89,10 +89,10 @@ export function DataCollection({ isRunning }) {
                       {data.trdeQty ? data.trdeQty.replace('-','').replace('+','').toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-blue-600">
-                      {/*₩{data.bid.toLocaleString()}*/}
+                      {data.highPric ? data.highPric.replace('-','').replace('+','').toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-red-600">
-                      {/*₩{data.ask.toLocaleString()}*/}
+                      {data.lowPric ? data.lowPric.replace('-','').replace('+','').toLocaleString() : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       {!isRunning ? (
