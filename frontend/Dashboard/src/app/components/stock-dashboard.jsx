@@ -1,45 +1,14 @@
 import { TrendingUp, TrendingDown, DollarSign, Activity } from 'lucide-react';
-import stockDashboardService from "@/app/services/stockDashboardService.jsx";
 import {useEffect, useMemo, useState} from "react";
-import {constants} from "@/app/libs/constants.js";
 
-export function StockDashboard({ onStockClick, cash, setCash }) {
-  const [assetList, setAssetList] = useState([])
-  const [account, setAccount] = useState({})
-  // cash_balance + total_eval
-
+export function StockDashboard({ onStockClick, assetList, account }) {
   const totalAssets = useMemo(() => {
     if (!account) return 0;
 
     return (account.cashBalance ?? 0) + (account.totalEval ?? 0);
   }, [account?.cashBalance, account?.totalEval]);
 
-  const dataLoad = async () => {
-    try {
-      const assetResponse = await stockDashboardService().getAssetList()
-      const accountResponse = await stockDashboardService().getAccount()
-      if(assetResponse.status === constants.RESULT_SUCCESS){
-        setAssetList(assetResponse.body)
-      }
-      if(accountResponse.status === constants.RESULT_SUCCESS){
-        setAccount(accountResponse.body)
-        setCash(accountResponse.body.cashBalance)
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
 
-  useEffect(() => {
-    dataLoad()
-    const id = setInterval(() => {
-      dataLoad()
-    }, 5 * 1000)
-
-    return () => {
-      clearInterval(id)
-    }
-  }, []);
 
   return (
     <div className="space-y-6">

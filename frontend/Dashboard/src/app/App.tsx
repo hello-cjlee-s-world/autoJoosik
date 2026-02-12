@@ -6,6 +6,8 @@ import { TransactionHistory } from './components/transaction-history';
 import { MarketList } from './components/market-list';
 import { DataCollection } from './components/data-collection';
 import { AutoTradingControl } from './components/auto-trading-control';
+import stockDashboardService from "./services/stockDashboardService.jsx";
+import {constants} from "./libs/constants.js";
 import { Briefcase, TrendingUp, History, ShoppingCart, Database } from 'lucide-react';
 
 export default function App() {
@@ -13,6 +15,37 @@ export default function App() {
   const [cash, setCash] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [selectedStock, setSelectedStock] = useState(null);
+  const [assetList, setAssetList] = useState([])
+  const [account, setAccount] = useState({})
+
+  const dataLoad = async () => {
+    try {
+      const assetResponse = await stockDashboardService().getAssetList()
+      const accountResponse = await stockDashboardService().getAccount()
+      if(assetResponse.status === constants.RESULT_SUCCESS){
+        setAssetList(assetResponse.body)
+      }
+      if(accountResponse.status === constants.RESULT_SUCCESS){
+        setAccount(accountResponse.body)
+        setCash(accountResponse.body.cashBalance)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    dataLoad()
+    const id = setInterval(() => {
+      dataLoad()
+    }, 5 * 1000)
+
+    return () => {
+      clearInterval(id)
+    }
+  }, []);
+
+
 
   const handleStockClick = (stock) => {
     setSelectedStock(stock);
@@ -114,10 +147,10 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'portfolio' && (
           <div className="space-y-6">
-            <StockDashboard 
+            <StockDashboard
               onStockClick={handleStockClick}
-              cash={cash}
-              setCash={setCash}
+              assetList={assetList}
+              account={account}
             />
             <AssetChart/>
           </div>
@@ -144,7 +177,6 @@ export default function App() {
           stock={selectedStock}
           cash={cash}
           onClose={() => setSelectedStock(null)}
-          // onTrade={handleTrade}
         />
       )}
     </div>

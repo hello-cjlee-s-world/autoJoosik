@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
 import tradeModalService from "@/app/services/tradeModalService.jsx";
 
-export function TradeModal({ stock, cash = 0, onClose, onTrade }) {
+export function TradeModal({ stock, cash = 0, onClose }) {
   const [tradeType, setTradeType] = useState("buy");
   const [shares, setShares] = useState("");
   const [price, setPrice] = useState(
@@ -85,7 +85,7 @@ export function TradeModal({ stock, cash = 0, onClose, onTrade }) {
 
       // onTrade는 너의 상위 컴포넌트 로직에 맞춰 유지
       // (원래 코드대로 symbol/name 쓰고 있었는데 stock 구조에 맞춰 조정 가능)
-      onTrade?.(stock.symbol, sharesNum, priceNum, tradeType);
+      // onTrade?.(stock.symbol, sharesNum, priceNum, tradeType);
       onClose?.();
     } catch (err) {
       console.error("trade failed:", err);
