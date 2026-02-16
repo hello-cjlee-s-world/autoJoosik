@@ -3,7 +3,7 @@ import api from "@/app/libs/api.js";
 
 const StockDashboardService = () => {
     const getAssetList = async () => {
-        const url = '/auto/assets'
+        const url = '/auto/dashboard/assets'
         const response = await api.GET(url);
         if(response.status !== constants.RESULT_SUCCESS){
             throw new Error('');
@@ -12,7 +12,7 @@ const StockDashboardService = () => {
     }
 
     const getAccount  = async () => {
-      const url = '/auto/account'
+      const url = '/auto/dashboard/account'
       const response = await api.GET(url);
       if(response.status !== constants.RESULT_SUCCESS){
         throw new Error('');

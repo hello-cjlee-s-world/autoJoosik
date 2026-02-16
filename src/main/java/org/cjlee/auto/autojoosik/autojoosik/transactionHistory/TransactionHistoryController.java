@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransactionHistoryController {
     private final TransactionHistoryService transactionHistoryService;
 
-    @RequestMapping(value="/auto/transactionHistory", method = RequestMethod.GET)
+    @RequestMapping(value="/history/transactionHistory", method = RequestMethod.GET)
     public ResponseResultList<TransactionHistoryDTO> getAssetDailies(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size

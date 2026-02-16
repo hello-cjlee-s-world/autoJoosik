@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping({"/", "/"})
     public String index() {
-        return "forward:/auto/index.html";
+        return "forward:/index.html";
     }
 }

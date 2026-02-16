@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../../src/main/resources/static/auto',
+    outDir: '../../src/main/resources/static',
     emptyOutDir: true,
     rollupOptions: {
       output: {

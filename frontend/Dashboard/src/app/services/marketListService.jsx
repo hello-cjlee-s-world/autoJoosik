@@ -3,7 +3,7 @@ import api from "@/app/libs/api.js";
 
 const MarketListService = () => {
     const getStockInfoList = async () => {
-        const url = '/auto/stocks'
+        const url = '/auto/marketList/stocks'
         const response = await api.GET(url);
         if(response.status !== constants.RESULT_SUCCESS){
             throw new Error('');

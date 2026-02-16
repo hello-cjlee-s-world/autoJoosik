@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StockDashboardController {
     private final StockDashboardService stockDashboardService;
 
-    @RequestMapping(value="/auto/assets", method = RequestMethod.GET)
+    @RequestMapping(value="/dashboard/assets", method = RequestMethod.GET)
     public ResponseResultList<VirtualAssetVO> getAssets() {
         ResponseResultList<VirtualAssetVO> result = new ResponseResultList<>();
         try {
@@ -34,7 +34,7 @@ public class StockDashboardController {
 
         return result;
     }
-    @RequestMapping(value="/auto/account", method = RequestMethod.GET)
+    @RequestMapping(value="/dashboard/account", method = RequestMethod.GET)
     public ResponseResultObject<VirtualAccountVO> getAccount() {
         ResponseResultObject<VirtualAccountVO> result = new ResponseResultObject<>();
         try {

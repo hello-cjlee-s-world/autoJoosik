@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MarketListController {
     private final MarketListService marketListService;
 
-    @RequestMapping(value="/auto/stocks", method = RequestMethod.GET)
+    @RequestMapping(value="/marketList/stocks", method = RequestMethod.GET)
     public ResponseResultList<StockInfoVO> getAssetDailies() {
         ResponseResultList<StockInfoVO> result = new ResponseResultList<>();
         try {

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AssetChartController {
     private final AssetChartService assetChartService;
 
-    @RequestMapping(value="/auto/assetDailies", method = RequestMethod.GET)
+    @RequestMapping(value="/assetChart/assetDailies", method = RequestMethod.GET)
     public ResponseResultList<VirtualAssetDailyVO> getAssetDailies() {
         ResponseResultList<VirtualAssetDailyVO> result = new ResponseResultList<>();
         try {
