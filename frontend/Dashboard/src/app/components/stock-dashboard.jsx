@@ -2,11 +2,11 @@ import { TrendingUp, TrendingDown, DollarSign, Activity } from 'lucide-react';
 import {useEffect, useMemo, useState} from "react";
 
 export function StockDashboard({ onStockClick, assetList, account }) {
-  const totalAssets = useMemo(() => {
+  const totalEval = useMemo(() => {
     if (!account) return 0;
 
-    return (account.cashBalance ?? 0) + (account.totalEval ?? 0);
-  }, [account?.cashBalance, account?.totalEval]);
+    return (account.cashBalance ?? 0) + (account.totalAsset ?? 0);
+  }, [account?.cashBalance, account?.totalAsset]);
 
 
 
@@ -20,7 +20,7 @@ export function StockDashboard({ onStockClick, assetList, account }) {
             <DollarSign className="w-5 h-5 text-blue-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            ₩{totalAssets ? parseFloat(totalAssets).toLocaleString() : '-'}
+            ₩{totalEval || totalEval === 0 ? parseFloat(totalEval).toLocaleString() : '-'}
           </div>
         </div>
 
@@ -30,7 +30,7 @@ export function StockDashboard({ onStockClick, assetList, account }) {
             <Activity className="w-5 h-5 text-purple-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            ₩{account.totalEval ? parseFloat(account.totalEval).toLocaleString() : '-'}
+            ₩{account.totalAsset || account.totalAsset === 0  ? parseFloat(account.totalAsset).toLocaleString() : '-'}
           </div>
         </div>
 
@@ -40,7 +40,7 @@ export function StockDashboard({ onStockClick, assetList, account }) {
             <DollarSign className="w-5 h-5 text-green-600" />
           </div>
           <div className="text-2xl font-bold text-gray-900">
-            ₩{account.cashBalance ? parseFloat(account.cashBalance).toLocaleString() : '-'}
+            ₩{account.cashBalance || account.cashBalance === 0 ? parseFloat(account.cashBalance).toLocaleString() : '-'}
           </div>
         </div>
 

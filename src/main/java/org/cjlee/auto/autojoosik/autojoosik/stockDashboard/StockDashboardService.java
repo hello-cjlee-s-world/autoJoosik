@@ -103,9 +103,20 @@ public class StockDashboardService {
 
     public VirtualAccountVO getAccount() {
         List<VirtualAccountEntity> entityList = virtualAccountRepository.findAll();
+        List<VirtualAssetEntity> assetList = virtualAssetRepository.findAll();
         VirtualAccountVO virtualAccountVO = new VirtualAccountVO();
         if(!entityList.isEmpty()) {
             virtualAccountVO = entityList.get(0).toVirtualAccountVO();
+        }
+
+        int totalAsset = 0;
+        if(!assetList.isEmpty()) {
+            for(VirtualAssetEntity asset : assetList){
+                totalAsset += asset.getQty() * asset.getAvgPrice();
+            }
+            virtualAccountVO.setTotalAsset(totalAsset);
+        } else {
+            virtualAccountVO.setTotalAsset(0);
         }
 
         return virtualAccountVO;
