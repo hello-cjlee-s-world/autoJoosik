@@ -100,9 +100,9 @@ export function TransactionHistory() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                           <span className={`font-medium ${
-                            transaction.type === 'B' ? 'text-red-600' : 'text-blue-600'
+                            transaction.side === 'B' ? 'text-red-600' : 'text-blue-600'
                           }`}>
-                            {transaction.type === 'B' ? '매수' : '매도'}
+                            {transaction.side === 'B' ? '매수' : '매도'}
                           </span>
                         <span className="font-medium text-gray-900">
                             {transaction.stkNm}
@@ -121,9 +121,9 @@ export function TransactionHistory() {
                   </div>
                   <div className="text-right">
                     <div className={`font-bold ${
-                      transaction.type === 'B' ? 'text-red-600' : 'text-blue-600'
+                      transaction.side === 'B' ? 'text-red-600' : 'text-blue-600'
                     }`}>
-                      {transaction.type === 'B' ? '-' : '+'}₩{transaction.filledAmount}
+                      {transaction.side === 'B' ? '-' : '+'}₩{transaction.filledAmount}
                     </div>
                   </div>
                 </div>
